@@ -1,0 +1,27 @@
+Entity Resolution Assignment
+Using the ER-Data.csv file (DELIMITER: ; ) you are requested to perform the following tasks:
+ 
+A.   Use the Token Blocking (not to be confused with Standard Blocking) method to create blocks in the form of K-V (Key-value) pairs. The key for every entry will be each distinct Blocking Key (BK) derived from the entities’ attribute values and the values for each BK will be the entities’ ids. Please note that the id column in the data can be used only as reference for the blocking index and it will NOT be used in the blocking process (block index creation). Please also note that you are advised to transform every string to lower case during the tokens creation (before you insert it in the index) to avoid false mismatches. At the end of the creation use a function to pretty-print the index.
+B.   Compute all the possible comparisons that shall be made to resolve the duplicates within the blocks that were created in Step A. After the computation, please print the final calculated number of comparisons.
+C.    Create a function that takes as input two entities and computes their Jaccard similarity based on the attribute title. You are not requested to perform any actual comparisons using this function.
+ 
+For the development of the aforementioned tasks you can choose to use between Java and Python Programming Languages. 
+
+If you are not familiar with neither of the two aforementioned programming languages you can also use pseudocode. Note that pseudocode that is too abstract, not well defined and not documented will not be accepted. Each step of the code must have comments and documentation describing its functionality.
+ 
+A.   Use the Token Blocking (not to be confused with Standard Blocking) method to create blocks in the form of K-V (Key-value) pairs. The key for every entry will be each distinct Blocking Key (BK) derived from the entities’ attribute values and the values for each BK will be the entities’ ids. Please note that the id column in the data can be used only as reference for the blocking index and it will NOT be used in the blocking process (block index creation). Please also note that you are advised to transform every string to lower case during the tokens creation (before you insert it in the index) to avoid false mismatches. At the end of the creation use a function to pretty-print the index.
+B.   Compute all the possible comparisons that shall be made to resolve the duplicates within the blocks that were created in Step A. After the computation, please print the final calculated number of comparisons.
+C.    Create a function that takes as input two entities and computes their Jaccard similarity based on the attribute title. You are not requested to perform any actual comparisons using this function.
+ 
+For the development of the aforementioned tasks you can choose to use between Java and Python Programming Languages. 
+
+If you are not familiar with neither of the two aforementioned programming languages you can also use pseudocode. Note that pseudocode that is too abstract, not well defined and not documented will not be accepted. Each step of the code must have comments and documentation describing its functionality. 
+
+
+The final deliverable will be:
+1.    The source code (with some useful comments)
+2.    A small report for each task (in one word file) justifying your code and describing the methodology that you used to accomplish each step.
+ 
+Step A will be graded with 65%
+Step B will be graded with 25%
+Step C will be graded with 10%
