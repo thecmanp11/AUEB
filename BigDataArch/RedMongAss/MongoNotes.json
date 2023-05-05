@@ -1,0 +1,447 @@
+﻿
+ββββ   ββββ βββββββ ββββ   βββ βββββββ  βββββββ βββββββ βββββββ 
+βββββ βββββββββββββββββββ  βββββββββββ βββββββββββββββββββββββββ
+ββββββββββββββ   βββββββββ ββββββ  βββββββ   ββββββ  βββββββββββ
+ββββββββββββββ   ββββββββββββββββ   ββββββ   ββββββ  βββββββββββ
+βββ βββ βββββββββββββββ ββββββββββββββββββββββββββββββββββββββββ
+βββ     βββ βββββββ βββ  βββββ βββββββ  βββββββ βββββββ βββββββ 
+                                                                
+
+/********************************************/
+/** Working with databases and collections **/
+/********************************************/
+
+// List all available databases
+// Method 1 (the MongoDB way):
+db.getMongo().getDBs()
+// Method 2:
+show dbs // Pay attention to the different response format
+
+// Switch to a database:
+use demodb 
+// Now, whenever you run something like db.SomeCommand() you'll be using the "demodb" database
+
+// Access a database without switching:
+db.getSiblingDB("demodb")
+// eg: db.getSiblingDB("demodb").getCollectionNames()
+
+// List the collections of a database
+db.getCollectionNames()
+// Create a new collection 
+db.createCollection("democol")
+db.getCollectionNames()
+// Create another collection
+db.createCollection("Democol")
+// Collections are case sensitive
+db.getCollectionNames()
+// Remove (delete) a collection
+db.Democol.drop()
+// Drop (delete) a database 
+db.dropDatabase()
+
+/********************/
+/** Inserting Data **/
+/********************/
+
+// Insert data by using the insert() function
+// Syntax: db.<collection_name>.insert(<document>)
+// If the collection does not exist, then the insert() method will create the collection.
+
+// Let's insert a simple document:
+db.democol.insert({"type":"demo"})
+
+// The document could be way more complex:
+db.democol.insert({ 
+	"first": "Spiros", 
+	"middle": "D.", 
+	"last": "Safras", 
+	"company": "BigDataLab", 
+	"job": "Data Engineer",
+	"age": 30, 
+	"languages": [ "Python", "Java", "Javascript", "R", "PHP", "Actionscript" ], 
+	"hasHair": false, 
+	"contact": { 
+		"email": "ssafras@gmail.com", 
+		"mobile" : 693123456789, 
+		"home" : 210123456789
+	} 
+})
+
+// We inserted two different documents that have a completely different structure. 
+// MongoDB is totally OK with that.
+
+// Several different data types are supported by MongoDB.
+//	"first": "Spiros" <- Strings 
+//	"age": 30 <- Numbers
+//	"languages": [ "Python", "...", "Actionscript" ] <- Arrays
+//	"hasHair": false <- Booleans
+//	"contact": { "email": "ssafras@gmail.com", "mobile" : 693123456789, } <- Even Nested Objects 
+
+// Let's insert another document using the insertOne() function
+// Syntax: db.<collection_name>.insertOne(<document>)
+db.democol.insertOne({ 
+	"first": "John", 
+	"middle": "D.", 
+	"last": "Papadopoulos", 
+	"company": "SmallDataLab", 
+	"job": "Data Analyst",
+	"age": 32, 
+	"languages": [ "Python", "R", "C#" ], 
+	"hasHair": true, 
+	"contact": { 
+		"email": "john@gmail.com", 
+		"mobile" : 694423456789, 
+		"home" : 211222333789
+	} 
+})
+
+// Pay attention to the output of insertOne() and compare it to the output of insert()
+
+// Let's insert many documents at once using the insertMany() function
+// We are going to use an array of documents.
+// Example of a document: { "name": "Spiros" }
+// Example of an array with 3 documents: [ { "name": "Spiros" }, { "name": "John" }, { "name": "Jack" } ]
+// Syntax: db.<collection_name>.insertMany(<array_of_document>)
+db.democol.insertMany([
+	{ 
+		"first": "Eric", 
+		"middle": "J.", 
+		"last": "Claptopn", 
+		"company": "Eric Clapton Co.", 
+		"job": "Guitar Player",
+		"age": 67, 
+		"languages": [], 
+		"hasHair": true, 
+		"contact": { 
+			"email": "eric@clapton.com", 
+			"mobile" : 697788456789, 
+			"home" : 2294023337
+		} 
+	},
+	{ 
+		"first": "Dean", 
+		"middle": "J.", 
+		"last": "Winchester", 
+		"company": "Supernatural", 
+		"job": "Ghost Hunter",
+		"age": 35, 
+		"languages": [ "Python", "R", "C#" ], 
+		"hasHair": true, 
+		"contact": { 
+			"email": "dean@supernatural.com", 
+			"mobile" : 6998877665, 
+			"home" : 2310998877
+		} 
+	}
+])
+
+// Again, pay attention to the output.
+// Let's have a look at all the records in the collection:
+db.democol.count()
+// The count() function is the equivalent of SELECT COUNT(*) FROM democol; in SQL
+
+/******************/
+/** Reading Data **/
+/******************/
+
+// Let's populate all data stored in the democol collection:
+db.democol.find()
+// This function is the equivalent of SELECT * FROM democol; in SQL
+
+// Let's make the output pretty:
+db.democol.find().pretty()
+
+// As you can see, all the documents of the democol collection have an extra attribute, "_id"
+// This is an automatically generated unique identifier for each record. If no "_id" value is
+// specified when inserting a document in mongo, the engine will generate one automatically.
+
+// Let's insert one document with a custom "_id"
+db.democol.insertOne({ 
+	"_id" : ObjectId("666666666666666666666666"),
+	"first": "Lucifer", 
+	"middle": "G.", 
+	"last": "Morningstar", 
+	"company": "LUX", 
+	"job": "Club Owner",
+	"age": 35, 
+	"languages": [ "Python" ], 
+	"hasHair": true, 
+	"contact": { 
+		"email": "lucifer@heaven.god", 
+		"mobile" : 6966666666, 
+		"home" : 2106666666
+	} 
+})
+
+// Let's have a look at our data:
+db.democol.find()
+
+// Instead of selecting everything, let's try to find the one item that we just inserted
+// Syntax: db.<collection_name>.find(<filter>)
+db.democol.find({ "first": "Lucifer" })
+
+// We just added a filter. We asked for the records that have a "first" attribute specified
+// AND its value is equal to "Lucifer". This function is the equivalent of:
+// SELECT * FROM democol WHERE first='Lucifer'; in SQL
+
+// As you see, filters in MongoDB are expressed in the form of {} objects that are passed as
+// arguments to the find() function.
+
+// Let's say that instead of getting back all the attributes of the documents, we are only
+// interested in the "first", "middle" and "last" attributes
+// Syntax: db.<collection_name>.find(<filter>,<projection>)
+
+// We can pass a second argument to find(). We will call this argument "projection"
+// Projection is a {} object as well. The attributes that have a "true" value will be returned
+// in the response. The "_id" is true by default. If we give "_id" a false value, it will not
+// be returned.
+
+// Let's try the following:
+db.democol.find({ "first": "Lucifer" },{ "first":true, "middle":true, "last":true })
+db.democol.find({ "first": "Lucifer" },{ "_id":false, "first":true, "middle":true, "last":true })
+// This is the equivalent of: SELECT first, middle, last FROM democol WHERE first='Lucifer'; in SQL
+
+// Now, let's find all those that have a middle name that is equal to "D."
+db.democol.find({ "middle": "D."})
+
+// Let's try to get back just one of the results. For this, we are going to use the findOne() function
+db.democol.findOne({ "middle": "D."})
+// This is the equivalent of: SELECT * FROM democol WHERE middle='D.' LIMIT 0,1; in SQL
+// findOne() always returns the first row of the resultset
+
+// Operators
+// MongoDB would not be fun without comparison operators. 
+// $eq: 	Matches values that are equal to a specified value.
+// $gt: 	Matches values that are greater than a specified value.
+// $gte: 	Matches values that are greater than or equal to a specified value.
+// $lt: 	Matches values that are less than a specified value.
+// $lte: 	Matches values that are less than or equal to a specified value.
+// $ne: 	Matches all values that are not equal to a specified value.
+
+// Let's try to find records with an age greater than 32
+db.democol.find({ "age": { $gt: 32 }})
+// Pay attention: Documents with no "age" attribute are not returned as well
+
+// Let's do the same for age greater than OR EQUAL to 32
+db.democol.find({ "age": { $gte: 32 }})
+
+// Let's try to find records with an age that is equal to 32
+// Method 1:
+db.democol.find({ "age": { $eq: 32 }})
+// Method 2 (Act the exact same way):
+db.democol.find({ "age": 32 })
+
+// Let's try to find records with an age that is not equal to 32
+
+// Method 1:
+db.democol.find({ "age": { $ne: 32 }})
+// $ne selects the documents where the value of the field is not equal to the specified value. 
+// This includes documents that do not contain the field.
+
+// Method 2 (We use the $not operator):
+// $not: 	Inverts the effect of a query expression and returns documents that do not match the query expression.
+db.democol.find({ "age": { $not: { $eq: 32 }}})
+
+// Operators do not prevent us from using a projection
+db.democol.find({ "age": { $not: { $eq: 32 }}},{ "_id":false, "first":true, "last":true, "age":true })
+
+// We can add multiple filters at the same time. Eg. age !=32 and middle="D."
+db.democol.find( { "age": { $ne: 32 }, "middle": { $eq: "D." } } )
+// As before, we can ommit the use of $eq
+db.democol.find( { "age": { $ne: 32 }, "middle": "D." } )
+// There are the equivalent of: SELECT * FROM democol WHERE age!=32 AND middle='D.'; in SQL
+
+// $exists: 	Checks if a document has a specific attribute
+db.democol.find({ "type" : { $exists : true}})
+
+
+// Do a check based on the data type of some attributes
+// You can find a table of the supported $type vales here:
+// https://docs.mongodb.com/manual/reference/operator/query/type/
+// As of version 3.2 there are string aliases for types
+
+// Let's insert a new record, the "company" of which will be a number:
+db.democol.insertOne({ 
+	"first": "Tony", 
+	"middle": "D.", 
+	"last": "Stark", 
+	"company": 4, 
+	"job": "Philanthropist",
+	"age": 46, 
+	"languages": [ "Python" ], 
+	"hasHair": true, 
+	"contact": { 
+		"email": "lucifer@heaven.god", 
+		"mobile" : 6966666666, 
+		"home" : 2106666666
+	} 
+})
+
+// Let's search for records that have a "company" attribute that's not a String
+// "2" is used for strings.
+db.democol.find( { "company" : { $not : { $type : 2 } } })
+
+// Pay attention to the result. We get both, the records that have a "company" that's not
+// a String, and the records that don't have such a value at all.
+
+// What if we want to get records where the value is not a string AND the value exists?
+db.democol.find( { $and: [{ "company" : { $not : { $type : 2 } } },{ "company": { $exists: true} } ]})
+
+// We just encountered a new logical operator, the $and operator
+// As you can see, $and accepts an array of filter objects as a parameter.
+
+// Logical Operators:
+// $and: 	Joins query clauses with a logical AND returns all documents that match the conditions of both clauses.
+// $nor: 	Joins query clauses with a logical NOR returns all documents that fail to match both clauses.
+// $or: 	Joins query clauses with a logical OR returns all documents that match the conditions of either clause.
+// $not: 	Inverts the effect of a query expression and returns documents that do not match the query expression.
+
+// Regexes (Regular Expressions)
+// https://en.wikipedia.org/wiki/Regular_expression
+// We can use regular expressions as filters in MongoDB. Examples:
+db.democol.find( { "first" : { $regex : "^S"}}) // Starts with "S"
+db.democol.find( { "first" : { $regex : "ros$"}}) //s end with "ros"
+db.democol.find( { "first" : { $regex : "iro"}}) // has "iro" somewhere
+db.democol.find( { "first" : { $regex : "[ih]"}}) // has either i or h somewhere
+
+// Working with arrays
+// Operators used with arrays
+// $in: 	Matches any of the values specified in an array.
+// $nin: 	Matches none of the values specified in an array.
+// $all: 	Matches arrays that contain all elements specified in the query.
+// $elemMatch: 	Selects documents if element in the array field matches all the specified $elemMatch conditions.
+// $size: 	Selects documents if the array field is a specified size.
+
+// The $in operator selects the documents where the value of a 
+// field equals any value in the specified array. 
+db.democol.find( {"languages": {$in :  ["Java", "C#"]}})
+
+// The $all operator selects the documents where the value of a 
+// field is an array that contains all the specified elements.
+db.democol.find( {"languages": {$all :  ["Java"]}})
+db.democol.find( {"languages": {$all :  ["Java", "C#"]}})
+
+// The $nin operator selects the documents where no value 
+// matches any of the values specified in an array.
+db.democol.find( {"languages": {$nin :  ["C#", "Cobol"]}})
+
+// Find records that have N elements inside the array specified
+db.democol.find( {"languages": {$size : 3}})
+
+// Find records that have elements > N inside the array specified
+db.democol.find( {"languages": {$size : { $gt: 3 } }}) // Does not work :(
+// One approach to solve this (We'll see another approach on the next lecture):
+db.democol.find({$nor: [
+    {"languages": {$exists: false}},
+    {"languages": {$size: 0}},
+    {"languages": {$size: 1}},
+    {"languages": {$size: 2}},
+    {"languages": {$size: 3}}
+]})
+
+
+// Search nested objects
+// Do not do the first three approaches - use the last for nested finds
+db.democol.findOne({ "contact": { "email": "ssafras@gmail.com", "mobile" : 693123456789, "home" : 210123456789 }} )
+db.democol.findOne({ "contact": { "home" : 210123456789, "email": "ssafras@gmail.com", "mobile" : 693123456789 }} )
+db.democol.find({ "contact": { "email": "ssafras@gmail.com"}} )
+// The following approach works, no matter the order in which you enter the nested attributes
+db.democol.find({ "contact.email" : "ssafras@gmail.com"} )
+db.democol.find({ "contact.email": "ssafras@gmail.com", "contact.mobile": 693123456789, "contact.home": 210123456789 } )
+db.democol.find({ "contact.email": "ssafras@gmail.com", "contact.home": 210123456789, "contact.mobile": 693123456789 } )
+
+
+// Sorting
+// Specify in the sort parameter the field or fields to sort by and a
+// value of 1 or -1 to specify an ascending or descending sort respectively.
+db.democol.find({ "age": { $exists: true }}, { "first": true, "last": true, "age": true, "_id": false}).sort({"age": 1})
+// Limiting
+// Limit the number of response records to N records
+db.democol.find({ "age": { $exists: true }}, { "first": true, "last": true, "age": true, "_id": false}).sort({"age": 1}).limit(2)
+// Skipping
+// Skip the first N records
+db.democol.find({ "age": { $exists: true }}, { "first": true, "last": true, "age": true, "_id": false}).sort({"age": 1}).limit(2).skip(2)
+
+/*******************/
+/** Updating Data **/
+/*******************/
+
+// Updating data can be tricky. Let's have a look at the documents
+// with a "middle" attribute that is equal to "D.":
+db.democol.find({"middle": "J."})
+
+// Let's try to update all the records and change the middle from "J." to "A."
+db.democol.update({"middle": "J."}, {"middle": "A."}) // Sounds good, doesn't work.
+
+// Let's have a look at the entries that have a "middle" equal to "A." now
+db.democol.find({"middle": "A."})
+
+// Ooops!.. 
+
+// Problem No 1: Only one document returned.
+// Let's run the following
+db.democol.find({"middle": "J."})
+// So, as we can see, one out of the initial two documents has not been altered at all..
+
+// Problem No 2: The whole document was replaced.
+// Let's run the following again
+db.democol.find({"middle": "A."})
+// As you can see, there is only one document, and this document contains
+// only the "middle" attribute 
+
+// Let's try again, with another example:
+db.democol.find({"middle": "D."})
+
+// Let's change all the "D." middle names to "W."
+db.democol.update( {"middle": "D."}, { $set: {"middle" : "W."}}, {"multi":true})
+
+// Let's see what we've accomplished
+db.democol.find({"middle": "D."})
+// No entries for D.
+db.democol.find({"middle": "W."})
+// All the entries changed successfully to "W."
+
+// Explanation
+// The $set operator allows us to update a specific field, 
+// leaving the rest of the document intact
+// The {"multi":true} argument means that not only the first,
+// but ALL the matching documents will be updated
+
+// Just like insert(), there are "One" and "Many" alternatives
+// for update() as well.
+
+// Try the following 
+db.democol.find({"middle": "D."})
+// Only one will be updated
+db.democol.updateOne( {"middle": "W."} , {$set : {"middle": "D."}})
+db.democol.find({"middle": "D."})
+// Every matching record will be updated
+db.democol.updateMany( {"middle": "W."} , {$set : {"middle": "D."}})
+db.democol.find({"middle": "D."})
+
+/*******************/
+/** Deleting Data **/
+/*******************/
+
+// Deleting is performed through the remove() function.
+// Compared to update(), remove() acts in the exact opposite way.
+db.democol.find({"middle": "D."})
+// Let's try to delete all the documents that have a "D." middle name
+db.democol.remove({"middle": "D."})
+// Now there are now such records in our database
+db.democol.find({"middle": "D."})
+
+// If we wanted to delete just one record:
+db.democol.remove({"middle": "D."}, {"justOne": true})
+// We should have added the {"justOne": true} argument
+
+
+ βββββββ  βββββββ  βββββββ βββββββ     βββ     βββ   βββ ββββββββββ  βββ
+ββββββββ ββββββββββββββββββββββββββ    βββ     βββ   ββββββββββββββ ββββ
+βββ  βββββββ   ββββββ   ββββββ  βββ    βββ     βββ   ββββββ     βββββββ 
+βββ   ββββββ   ββββββ   ββββββ  βββ    βββ     βββ   ββββββ     βββββββ 
+βββββββββββββββββββββββββββββββββββ    ββββββββββββββββββββββββββββ  βββ
+ βββββββ  βββββββ  βββββββ βββββββ     ββββββββ βββββββ  ββββββββββ  βββ
+                                                                        {
+
+}
